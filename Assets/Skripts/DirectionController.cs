@@ -40,9 +40,9 @@ public class DirectionController : MonoBehaviour {
         currAngles.y = Mathf.Max(minAngle, Mathf.Min(maxAngle, currAngles.y));
         transform.parent.gameObject.transform.eulerAngles = currAngles;
 
-        float scale = diff.magnitude / 2;
+        float scale = diff.magnitude / 7;
         scale = Mathf.Max(minScale, Mathf.Min(maxScale, scale));
-        transform.parent.gameObject.transform.localScale = new Vector3(transform.localScale.x, scale, transform.localScale.z);
+        transform.parent.gameObject.transform.localScale = new Vector3(transform.parent.gameObject.transform.localScale.x, scale, transform.parent.gameObject.transform.localScale.z);
         lastMousePos = currMousePos;
     }
 
