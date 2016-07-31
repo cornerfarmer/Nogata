@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System;
 
 public class NogataController : MonoBehaviour {
     
@@ -9,8 +8,9 @@ public class NogataController : MonoBehaviour {
     private GameObject[] gravitiyInfluencers;
     private float G = 6.674e-11f;
     private bool shot;
-	// Use this for initialization
-	void Start () {
+    public float rotationSpeed = 800;
+    // Use this for initialization
+    void Start () {
         rb = GetComponent<Rigidbody>();
         gravitiyInfluencers = GameObject.FindGameObjectsWithTag("GravityInfluencer");
         shot = false;
@@ -30,6 +30,7 @@ public class NogataController : MonoBehaviour {
 
                 rb.AddForce(diff * strength);
             }
+            
         }
     }
 
@@ -41,6 +42,10 @@ public class NogataController : MonoBehaviour {
         rb.AddForce(dir * direction.transform.localScale.y * 1000);
         shot = true;
         direction.SetActive(false);
+
+        Vector3 rot = new Vector3(Random.Range(0.00001f, 1), Random.Range(0.00001f, 1), Random.Range(0.00001f, 1));
+        rot.Normalize();
+        rb.AddTorque(rot.x * rotationSpeed, rot.y * rotationSpeed, rot.z * rotationSpeed);
     }
 
 
