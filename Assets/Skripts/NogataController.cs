@@ -8,23 +8,28 @@ public class NogataController : MonoBehaviour {
     private Rigidbody rb;
     private GameObject[] gravitiyInfluencers;
     private float G = 6.674e-11f;
+    private bool shot;
 	// Use this for initialization
 	void Start () {
         rb = GetComponent<Rigidbody>();
         gravitiyInfluencers = GameObject.FindGameObjectsWithTag("GravityInfluencer");
+        shot = false;
     }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        foreach (GameObject gravitiyInfluencer in gravitiyInfluencers)
+        if (shot)
         {
-            Vector3 diff = gravitiyInfluencer.transform.position - transform.position;
+            foreach (GameObject gravitiyInfluencer in gravitiyInfluencers)
+            {
+                Vector3 diff = gravitiyInfluencer.transform.position - transform.position;
 
-            float strength = G * gravitiyInfluencer.GetComponent<Rigidbody>().mass * rb.mass / Mathf.Pow(diff.magnitude, 2);
+                float strength = G * gravitiyInfluencer.GetComponent<Rigidbody>().mass * rb.mass / Mathf.Pow(diff.magnitude, 2) * 10e7f;
 
-            diff.Normalize();
+                diff.Normalize();
 
-            rb.AddForce(diff * strength);
+                rb.AddForce(diff * strength);
+            }
         }
     }
 
@@ -33,7 +38,9 @@ public class NogataController : MonoBehaviour {
         Vector3 angle = direction.transform.eulerAngles;
         Vector3 dir = new Vector3(Mathf.Sin(angle.y / 180 * Mathf.PI), 0, Mathf.Cos(angle.y / 180 * Mathf.PI));
 
-        rb.AddForce(dir * direction.transform.localScale.y * 1000000);
+        rb.AddForce(dir * direction.transform.localScale.y * 1000);
+        shot = true;
+        direction.SetActive(false);
     }
 
 
