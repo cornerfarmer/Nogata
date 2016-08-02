@@ -18,7 +18,7 @@ public class NogataController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        if (shot)
+        if (shot && !GetComponent<Collider>().isTrigger)
         {
             foreach (GameObject gravitiyInfluencer in gravitiyInfluencers)
             {
