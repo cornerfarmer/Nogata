@@ -7,10 +7,11 @@ public class EarthController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         exploded = false;
+        Physics.IgnoreCollision(GameObject.FindGameObjectsWithTag("Nogata")[0].GetComponent<Collider>(), GetComponent<Collider>());
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
 	
 	}
 
@@ -37,10 +38,12 @@ public class EarthController : MonoBehaviour {
             smokePS.transform.position = particlePosition;
             smokePS.Play();
 
-            other.GetComponent<Rigidbody>().velocity = other.GetComponent<Rigidbody>().velocity * 0.3f;
+            other.GetComponent<Rigidbody>().velocity = other.GetComponent<Rigidbody>().velocity * 0.08f;
             other.GetComponent<Collider>().isTrigger = true;
 
             exploded = true;
+
+            Destroy(other.gameObject, 2);
         }
     }
 }
