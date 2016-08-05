@@ -44,6 +44,8 @@ public class EarthController : MonoBehaviour {
             exploded = true;
 
             Destroy(other.gameObject, 2);
+
+            GameObject.Find("GameController").GetComponent<GameController>().ShotFinished(true);
         }
     }
 }

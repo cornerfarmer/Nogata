@@ -15,8 +15,11 @@ public class StarController : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        GameObject.Find("GameController").GetComponent<GameController>().AddStar();
-        Destroy(gameObject);
+        if (other.name == "Nogata")
+        {
+            GameObject.Find("GameController").GetComponent<GameController>().AddStar();
+            Destroy(gameObject);
+        }
     }
 
 }
