@@ -68,7 +68,6 @@
     <Compile Include="Assets\EarthController.cs" />
     <Compile Include="Assets\GameController.cs" />
     <Compile Include="Assets\PlanetController.cs" />
-    <Compile Include="Assets\ScoreController.cs" />
     <Compile Include="Assets\Skripts\CircleAroundController.cs" />
     <Compile Include="Assets\Skripts\DirectionController.cs" />
     <Compile Include="Assets\Skripts\NogataController.cs" />
