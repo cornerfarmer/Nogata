@@ -66,5 +66,6 @@ public class GameController : MonoBehaviour {
     {
         data = new Data();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        GameObject.Find("Canvas").GetComponent<UIController>().ShowIngameUI();
     }
 }
