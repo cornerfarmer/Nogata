@@ -8,8 +8,26 @@ public class Data
     public int stars;
     public int meteoritesLeft;
     public bool earthHit;
-
+    public int[] highscores;
     public Data()
+    {
+        stars = 0;
+        meteoritesLeft = 5;
+        earthHit = false;
+        highscores = new int[SceneManager.sceneCountInBuildSettings - 1];
+    }
+
+    public int getCurrentHighscore()
+    {
+        return highscores[int.Parse(SceneManager.GetActiveScene().name.Substring("Level".Length)) - 1];
+    }
+
+    public void setCurrentHighscore(int score)
+    {
+        highscores[int.Parse(SceneManager.GetActiveScene().name.Substring("Level".Length)) - 1] = score;
+    }
+
+    public void resetIngame()
     {
         stars = 0;
         meteoritesLeft = 5;
@@ -64,7 +82,7 @@ public class GameController : MonoBehaviour {
 
     public void Retry()
     {
-        data = new Data();
+        data.resetIngame();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         GameObject.Find("Canvas").GetComponent<UIController>().ShowIngameUI();
     }

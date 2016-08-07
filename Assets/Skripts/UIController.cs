@@ -12,7 +12,7 @@ public class UIController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         currentLevel = 1;
-        levelCount = 5;
+        levelCount = SceneManager.sceneCountInBuildSettings - 1;
 
         Button shotButton = transform.FindChild("IngamePanel").FindChild("ShotButton").GetComponent<Button>();
         shotButton.onClick.AddListener(Shot);
@@ -48,6 +48,11 @@ public class UIController : MonoBehaviour {
         mainMenuButton.onClick.AddListener(OpenMainMenu);
 
         RefreshScore();
+
+        if (SceneManager.GetActiveScene().name.StartsWith("Level"))
+        {
+            ShowIngameUI();
+        }
     }
 	
 	// Update is called once per frame
@@ -98,7 +103,18 @@ public class UIController : MonoBehaviour {
         transform.FindChild("ShotFinishedPanel").gameObject.SetActive(false);
 
         Data data = GameObject.Find("GameController").GetComponent<GameController>().GetData();
-        transform.FindChild("LevelFinishedPanel").FindChild("Score").GetComponent<Text>().text = "Score: " + (data.stars * 2 + data.meteoritesLeft);
+        int score = (data.stars * 2 + data.meteoritesLeft);
+        transform.FindChild("LevelFinishedPanel").FindChild("Score").GetComponent<Text>().text = "Score: " + score;
+        if (score > data.getCurrentHighscore())
+        {
+            transform.FindChild("LevelFinishedPanel").FindChild("Highscore").GetComponent<Text>().text = "New Highscore!";
+            data.setCurrentHighscore(score);
+        }
+        else
+        {
+            transform.FindChild("LevelFinishedPanel").FindChild("Highscore").GetComponent<Text>().text = "Current highscore: " + data.getCurrentHighscore();
+        }
+
         transform.FindChild("LevelFinishedPanel").gameObject.SetActive(true);
     }
 
@@ -130,12 +146,15 @@ public class UIController : MonoBehaviour {
     void RefreshLevelMenu()
     {
         transform.FindChild("LevelMenuPanel").FindChild("LevelPanel").FindChild("LevelName").GetComponent<Text>().text = "Level " + currentLevel;
+        Data data = GameObject.Find("GameController").GetComponent<GameController>().GetData();
+        transform.FindChild("LevelMenuPanel").FindChild("LevelPanel").FindChild("Highscore").GetComponent<Text>().text = "Highscore: " + data.highscores[currentLevel - 1];
         transform.FindChild("LevelMenuPanel").FindChild("BackButton").gameObject.SetActive(currentLevel > 1);
         transform.FindChild("LevelMenuPanel").FindChild("NextButton").gameObject.SetActive(currentLevel < levelCount);
     }
 
     void StartLevel()
     {
+        GameObject.Find("GameController").GetComponent<GameController>().GetData().resetIngame();
         SceneManager.LoadScene("Level" + currentLevel);
         transform.FindChild("LevelMenuPanel").gameObject.SetActive(false);
         transform.FindChild("IngamePanel").gameObject.SetActive(true);
