@@ -17,7 +17,7 @@ public class StarController : MonoBehaviour {
     {
         if (other.name == "Nogata")
         {
-            GameObject.Find("GameController").GetComponent<GameController>().AddStar();
+            GameObject.Find("GameController").GetComponent<GameController>().AddStar(int.Parse(name.Substring("Star".Length)));
             Destroy(gameObject);
         }
     }

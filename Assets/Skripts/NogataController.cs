@@ -22,13 +22,16 @@ public class NogataController : MonoBehaviour {
         {
             foreach (GameObject gravitiyInfluencer in gravitiyInfluencers)
             {
-                Vector3 diff = gravitiyInfluencer.transform.position - transform.position;
+                if (gravitiyInfluencer != null)
+                {
+                    Vector3 diff = gravitiyInfluencer.transform.position - transform.position;
 
-                float strength = G * gravitiyInfluencer.GetComponent<Rigidbody>().mass * rb.mass / Mathf.Pow(diff.magnitude, 2) * 10e7f;
+                    float strength = G * gravitiyInfluencer.GetComponent<Rigidbody>().mass * rb.mass / Mathf.Pow(diff.magnitude, 2) * 10e7f;
 
-                diff.Normalize();
+                    diff.Normalize();
 
-                rb.AddForce(diff * strength);
+                    rb.AddForce(diff * strength);
+                }
             }
             
         }

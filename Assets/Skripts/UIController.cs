@@ -17,6 +17,9 @@ public class UIController : MonoBehaviour {
         Button shotButton = transform.FindChild("IngamePanel").FindChild("ShotButton").GetComponent<Button>();
         shotButton.onClick.AddListener(Shot);
 
+        Button stopButton = transform.FindChild("IngamePanel").FindChild("StopButton").GetComponent<Button>();
+        stopButton.onClick.AddListener(Stop);
+
         Button nextShotButton = transform.FindChild("ShotFinishedPanel").FindChild("NextShotButton").GetComponent<Button>();
         nextShotButton.onClick.AddListener(NextShot);
 
@@ -65,6 +68,13 @@ public class UIController : MonoBehaviour {
         nogata.GetComponent<NogataController>().Shot();
         GameObject.Find("GameController").GetComponent<GameController>().ShotStarted();
         transform.FindChild("IngamePanel").FindChild("ShotButton").gameObject.SetActive(false);
+        transform.FindChild("IngamePanel").FindChild("StopButton").gameObject.SetActive(true);
+    }
+
+    void Stop()
+    {
+        Destroy(GameObject.Find("Nogata"));
+        GameObject.Find("GameController").GetComponent<GameController>().ShotFinished(false);
     }
 
     void NextShot()
@@ -74,7 +84,7 @@ public class UIController : MonoBehaviour {
 
     public void RefreshScore()
     {
-        transform.FindChild("IngamePanel").FindChild("ScoreUI").GetComponent<Text>().text = "Stars: " + GameObject.Find("GameController").GetComponent<GameController>().GetData().stars;
+        transform.FindChild("IngamePanel").FindChild("ScoreUI").GetComponent<Text>().text = "Stars: " + GameObject.Find("GameController").GetComponent<GameController>().GetData().getStarCount();
         transform.FindChild("IngamePanel").FindChild("MeteoritesUI").GetComponent<Text>().text = "Meteorites: " + GameObject.Find("GameController").GetComponent<GameController>().GetData().meteoritesLeft;
     }
 
@@ -83,12 +93,12 @@ public class UIController : MonoBehaviour {
         transform.FindChild("IngamePanel").gameObject.SetActive(false);
 
         Data data = GameObject.Find("GameController").GetComponent<GameController>().GetData();
-        transform.FindChild("ShotFinishedPanel").FindChild("ScoreSummary").GetComponent<Text>().text = "Stars: " + data.stars + " (x2)\n";
+        transform.FindChild("ShotFinishedPanel").FindChild("ScoreSummary").GetComponent<Text>().text = "Stars: " + data.getStarCount() + " (x2)\n";
         transform.FindChild("ShotFinishedPanel").FindChild("ScoreSummary").GetComponent<Text>().text += "Meteorites left: " + data.meteoritesLeft;
         transform.FindChild("ShotFinishedPanel").FindChild("NoScoreWarning").gameObject.SetActive(!data.earthHit);
         transform.FindChild("ShotFinishedPanel").FindChild("WholeScore").gameObject.SetActive(data.earthHit);
-        transform.FindChild("ShotFinishedPanel").FindChild("WholeScore").GetComponent<Text>().text = "Score: " + (data.stars * 2 + data.meteoritesLeft);
-        transform.FindChild("ShotFinishedPanel").FindChild("NextShotButton").gameObject.SetActive(data.meteoritesLeft > 0 && data.stars < 3);
+        transform.FindChild("ShotFinishedPanel").FindChild("WholeScore").GetComponent<Text>().text = "Score: " + (data.getStarCount() * 2 + data.meteoritesLeft);
+        transform.FindChild("ShotFinishedPanel").FindChild("NextShotButton").gameObject.SetActive(data.meteoritesLeft > 0 && data.getStarCount() < 3);
 
         transform.FindChild("ShotFinishedPanel").gameObject.SetActive(true);
     }
@@ -103,7 +113,9 @@ public class UIController : MonoBehaviour {
         transform.FindChild("ShotFinishedPanel").gameObject.SetActive(false);
 
         Data data = GameObject.Find("GameController").GetComponent<GameController>().GetData();
-        int score = (data.stars * 2 + data.meteoritesLeft);
+        int score = (data.getStarCount() * 2 + data.meteoritesLeft);
+        if (!data.earthHit)
+            score = 0;
         transform.FindChild("LevelFinishedPanel").FindChild("Score").GetComponent<Text>().text = "Score: " + score;
         if (score > data.getCurrentHighscore())
         {
